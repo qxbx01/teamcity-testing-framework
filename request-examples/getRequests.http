@@ -1,0 +1,4 @@
+### GET request to example server
+GET http://admin:admin@192.168.178.57:8111/app/rest/buildTypes/id:TestProject_TestBuildConfig
+Accept: application/json
+###
