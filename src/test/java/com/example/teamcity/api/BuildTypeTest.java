@@ -1,4 +1,7 @@
 package com.example.teamcity.api;
+import com.example.teamcity.api.models.User;
+import com.example.teamcity.api.requests.checked.CheckedBase;
+import io.qameta.allure.internal.shadowed.jackson.databind.ser.impl.UnknownSerializer;
 import org.testng.annotations.Test;
 import static io.qameta.allure.Allure.step;
 
@@ -8,7 +11,9 @@ import static io.qameta.allure.Allure.step;
 public class BuildTypeTest extends BaseApiTest {
     @Test(description = "User should be able to create build type", groups = {"Positive", "CRUD"})
     public void userCreatesBuildTypeTest() {
-        step("Create user");
+        step("Create user", () -> {
+            new CheckedBase<User>();
+        });
         step("Create project by user");
         step("Create buildType for project by user");
         step("Check buildType was created successfully with correct data");
