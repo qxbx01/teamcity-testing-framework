@@ -1,10 +1,7 @@
 package com.example.teamcity.ui;
 
-import com.example.teamcity.ui.pages.admin.CreateProjectPage;
 import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.ui.pages.BuildConfigurationPage;
-import com.example.teamcity.ui.pages.LoginPage;
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.Test;
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.Project;
@@ -19,12 +16,10 @@ public class BuildConfigurationTest extends BaseUiTest {
         var createdProject = superUserCheckRequests.<Project>getRequest(Endpoint.PROJECTS).create(testData.getProject());
         softy.assertNotNull(createdProject, "The project was not created through the API");
 
-        // Открытие страницы создания билд-конфигурации
         BuildConfigurationPage.open(createdProject.getId())
                 .createForm(REPO_URL)
                 .setupBuildConfiguration(testData.getBuildType().getName());
 
-        // Проверка, что билд-конфигурация создана через API
         var createdBuildType = superUserCheckRequests.<BuildType>getRequest(Endpoint.BUILD_TYPES)
                 .read("name:" + testData.getBuildType().getName());
         softy.assertNotNull(createdBuildType, "The build configuration was not created.");
@@ -37,7 +32,7 @@ public class BuildConfigurationTest extends BaseUiTest {
 
         BuildConfigurationPage.open(createdProject.getId())
                 .createForm(REPO_URL)
-                .setupBuildConfiguration(""); // Передаем пустое имя для теста
+                .setupBuildConfiguration("");
 
         String errorMessage = BuildConfigurationPage.getErrorMessageText();
         softy.assertEquals(errorMessage, "Build configuration name must not be empty", "Error message is not as expected.");
