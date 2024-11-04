@@ -27,7 +27,7 @@ public class BuildConfigurationPage extends CreateBasePage {
     }
 
     public BuildConfigurationPage createForm(String url) {
-        new CreateProjectPage().createForm(url); // Создаем новый экземпляр и используем его
+        new CreateProjectPage().createForm(url);
         return this;
     }
 }
