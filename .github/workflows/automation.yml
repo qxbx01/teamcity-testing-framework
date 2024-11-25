@@ -72,6 +72,15 @@ jobs:
           allure_results: target/allure-results
           subfolder: ${{ inputs.package }}
 
+
+      - name: Fetch gh-pages
+        run: |
+          git fetch origin gh-pages
+          git checkout gh-pages || git checkout -b gh-pages
+          git pull origin gh-pages
+        if: always()
+        continue-on-error: true
+
       # Создаем пустую ветку gh-pages на основе инструкции https://gist.github.com/ramnathv/2227408
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
@@ -80,3 +89,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
+
+
+
