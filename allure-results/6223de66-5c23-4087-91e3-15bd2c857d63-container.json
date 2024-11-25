@@ -1,0 +1,1 @@
+{"uuid":"6223de66-5c23-4087-91e3-15bd2c857d63","name":"com.example.teamcity.ui.BuildConfigurationTest","children":["50e7c221-23c3-4ac0-9b02-16790d8feee9"],"befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1730727155284,"stop":1730727155284}],"afters":[],"start":1730727155240,"stop":1730727160836}
