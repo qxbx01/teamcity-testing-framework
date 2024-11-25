@@ -72,14 +72,11 @@ jobs:
           allure_results: target/allure-results
           subfolder: ${{ inputs.package }}
 
-
-      - name: Fetch gh-pages
+      - name: Pull latest changes from gh-pages
         run: |
           git fetch origin gh-pages
-          git checkout gh-pages || git checkout -b gh-pages
-          git pull origin gh-pages
-        if: always()
-        continue-on-error: true
+          git checkout gh-pages
+          git pull origin gh-pages --rebase
 
       # Создаем пустую ветку gh-pages на основе инструкции https://gist.github.com/ramnathv/2227408
       - name: Publish test report
