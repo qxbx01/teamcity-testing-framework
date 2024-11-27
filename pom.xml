@@ -21,15 +21,11 @@
     <jackson.version>2.17.2</jackson.version>
     <selenide.version>7.4.3</selenide.version>
     <swagger-coverage-version>1.5.0</swagger-coverage-version>
+    <allure.version>2.27.0</allure.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>io.qameta.allure</groupId>
-      <artifactId>allure-testng</artifactId>
-      <version>${allure.version}</version>
-      <scope>test</scope>
-    </dependency><dependency>
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-selenide</artifactId>
       <version>${allure.version}</version>
@@ -46,6 +42,10 @@
       <groupId>com.codeborne</groupId>
       <artifactId>selenide</artifactId>
       <version>${selenide.version}</version>
+    </dependency><dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
     </dependency><dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
@@ -67,11 +67,6 @@
       <groupId>com.codeborne</groupId>
       <artifactId> selenide-testng </artifactId>
       <version>7.2.3</version>
-      <scope>test</scope>
-    </dependency><dependency>
-      <groupId>io.qameta.allure</groupId>
-      <artifactId>allure-selenide</artifactId>
-      <version>${allure.version}</version>
       <scope>test</scope>
     </dependency><dependency>
       <groupId>org.testng</groupId>
