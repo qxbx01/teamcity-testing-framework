@@ -86,7 +86,7 @@ jobs:
 
       - name: Pull latest changes from gh-pages
         run: |
-          rm -f gh-pages
+          rm -rf gh-pages
           git fetch origin gh-pages
           git checkout gh-pages -- || git checkout --track origin/gh-pages
           git pull origin gh-pages --rebase || echo "No changes to pull"
