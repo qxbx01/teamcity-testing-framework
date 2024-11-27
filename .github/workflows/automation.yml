@@ -84,6 +84,20 @@ jobs:
           allure_results: target/allure-results
           subfolder: ${{ inputs.package }}
 
+      - name: Pull latest changes from gh-pages
+        run: |
+          git fetch origin gh-pages
+          git checkout gh-pages
+          git pull origin gh-pages --rebase || echo "No changes to pull"
+
+      - name: Prepare Allure Report
+        run: |
+          git add --all
+          git commit -m "Update reports" || echo "No changes to commit"
+
+      - name: Push Allure Report
+        run: git push origin gh-pages --force
+
       # Создаем пустую ветку gh-pages на основе инструкции https://gist.github.com/ramnathv/2227408
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
