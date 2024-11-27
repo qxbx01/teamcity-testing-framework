@@ -56,7 +56,7 @@ jobs:
         uses: ./.github/actions/teamcity-setup
 
       - name: Set HOST environment variable
-        run: echo "HOST=192.168.178.57" >> $GITHUB_ENV
+        run: echo "HOST=192.168.178.57:8111" >> $GITHUB_ENV
 
       - name: Run tests
         continue-on-error: true
