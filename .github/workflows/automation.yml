@@ -13,11 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: List project files
-        run: ls -la
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -25,26 +20,12 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
 
+      - name: Grant execution permissions to mvnw
+        shell: bash
+        run: chmod +x ./mvnw
+
       - name: Validate Checkstyle
         run: ./mvnw validate
-
-      - name: Build Allure Report
-        run: ./mvnw allure:report
-
-      - name: Pull latest gh-pages
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "GitHub Actions Bot"
-          git fetch origin gh-pages
-          git checkout gh-pages || git checkout --orphan gh-pages
-          git pull origin gh-pages --rebase || echo "No remote changes to pull"
-
-      - name: Publish Allure Report
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
 
   run-tests:
     needs: validate-checkstyle
@@ -55,62 +36,44 @@ jobs:
       - name: TeamCity Setup
         uses: ./.github/actions/teamcity-setup
 
-      - name: Set HOST environment variable
-        run: echo "HOST=192.168.178.57:8111" >> $GITHUB_ENV
-
-      - name: Set Browser Name
-        run: echo "browser.name=chrome" >> $GITHUB_ENV
-
-      - name: Verify Browser Name
-        run:
-          echo "Browser Name: $browser.name"
+      - name: Grant execution permissions to mvnw
+        shell: bash
+        run: chmod +x ./mvnw
 
       - name: Run tests
         continue-on-error: true
-        run: ./mvnw test -Dtest="com.example.teamcity.${{ inputs.package }}.**" -Dgroups=Regression -Dbrowser.name=${{ env.browser.name }}
+        # Указываем группу, чтобы не запустить тесты, связанные с сетапом TeamCity
+        run: ./mvnw test -Dtest='com.example.teamcity.${{ inputs.package }}.**' -Dgroups=Regression
 
-      - name: Install Swagger Coverage
-        run: |
-          wget https://github.com/viclovsky/swagger-coverage/releases/latest/download/swagger-coverage-commandline.zip
-          unzip swagger-coverage-commandline.zip -d swagger-coverage
-          chmod +x swagger-coverage/bin/swagger-coverage-commandline
+      - name: Grant execute permissions for swagger-coverage-commandline
+        run: chmod +x .swagger-coverage-commandline/bin/*
 
+        # Создаем репорт с покрытием API тестов, основанном на Swagger.
+        # Документация: https://github.com/viclovsky/swagger-coverage
+        # Обязательно добавить фильтр SwaggerCoverageRestAssured в RestAssured
       - name: Run Swagger Coverage
         continue-on-error: true
         if: ${{ inputs.package == 'api' }}
-        run: swagger-coverage/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
+        run: .swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
 
+      # Сохраняем Swagger Report в артефакты GitHub Actions
       - name: Save Swagger Coverage
-        if: ${{ inputs.package == 'api' && success() }}
         uses: actions/upload-artifact@v4
+        if: ${{ inputs.package == 'api' }}
         with:
           name: swagger-coverage
           path: |
             swagger-coverage-report.html
             swagger-coverage-results.json
 
-      - name: Ensure gh-pages branch exists
-        run: |
-          git fetch origin gh-pages || git checkout --orphan gh-pages
-          git reset --hard
-          git commit --allow-empty -m "Initialize gh-pages branch"
-          git push origin gh-pages
-
+      # Загружаем историю Allure Report с специальной ветки gh-pages (https://allurereport.org/docs/integrations-github/)
       - name: Load test report history
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         if: always()
         continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
-
-      - name: Verify Allure results exist
-        if: always()
-        run: |
-          if [ ! -d "target/allure-results" ]; then
-            echo "Allure results directory not found!"
-            exit 1
-          fi
 
       - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
@@ -121,12 +84,7 @@ jobs:
           allure_results: target/allure-results
           subfolder: ${{ inputs.package }}
 
-      - name: Pull latest changes from gh-pages
-        run: |
-          git fetch origin gh-pages
-          git checkout gh-pages
-          git pull origin gh-pages --rebase
-
+      # Создаем пустую ветку gh-pages на основе инструкции https://gist.github.com/ramnathv/2227408
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
         if: always()
