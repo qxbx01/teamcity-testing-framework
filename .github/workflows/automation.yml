@@ -84,6 +84,7 @@ jobs:
           allure_results: target/allure-results
           subfolder: ${{ inputs.package }}
 
+
       - name: Pull latest changes from gh-pages
         run: |
           rm -rf gh-pages
