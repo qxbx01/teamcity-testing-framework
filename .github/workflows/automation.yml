@@ -61,10 +61,13 @@ jobs:
       - name: Set Browser Name
         run: echo "browser.name=chrome" >> $GITHUB_ENV
 
+      - name: Verify Browser Name
+        run:
+          echo "Browser Name: $browser.name"
+
       - name: Run tests
         continue-on-error: true
-        # Указываем группу, чтобы не запустить тесты, связанные с сетапом TeamCity
-        run: ./mvnw test -Dtest="com.example.teamcity.${{ inputs.package }}.**" -Dgroups=Regression
+        run: ./mvnw test -Dtest="com.example.teamcity.${{ inputs.package }}.**" -Dgroups=Regression -Dbrowser.name=${{ env.browser.name }}
 
       - name: Install Swagger Coverage
         run: |
