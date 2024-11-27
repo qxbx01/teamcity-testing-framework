@@ -13,12 +13,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'zulu'
+
+      - name: Build Allure Report
+        run: ./mvnw allure:report
+
+      - name: Pull latest gh-pages
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions Bot"
+          git fetch origin gh-pages
+          git checkout gh-pages || git checkout --orphan gh-pages
+          git pull origin gh-pages --rebase || echo "No remote changes to pull"
+
+      - name: Publish Allure Report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
 
       - name: Validate Checkstyle
         run: ./mvnw validate
