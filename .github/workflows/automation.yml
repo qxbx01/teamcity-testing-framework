@@ -16,11 +16,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: List project files
+        run: ls -la
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'zulu'
+
+      - name: Validate Checkstyle
+        run: ./mvnw validate
 
       - name: Build Allure Report
         run: ./mvnw allure:report
@@ -39,9 +45,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
-
-      - name: Validate Checkstyle
-        run: ./mvnw validate
 
   run-tests:
     needs: validate-checkstyle
