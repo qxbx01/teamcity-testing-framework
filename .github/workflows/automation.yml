@@ -58,6 +58,9 @@ jobs:
       - name: Set HOST environment variable
         run: echo "HOST=192.168.178.57:8111" >> $GITHUB_ENV
 
+      - name: Set Browser Name
+        run: echo "browser.name=chrome" >> $GITHUB_ENV
+
       - name: Run tests
         continue-on-error: true
         # Указываем группу, чтобы не запустить тесты, связанные с сетапом TeamCity
