@@ -86,9 +86,7 @@ jobs:
 
       - name: Pull latest changes from gh-pages
         run: |
-        # Удаляем любой конфликтующий файл с именем gh-pages
           rm -f gh-pages
-        # Явно указываем на работу с веткой
           git fetch origin gh-pages
           git checkout gh-pages -- || git checkout --track origin/gh-pages
           git pull origin gh-pages --rebase || echo "No changes to pull"
