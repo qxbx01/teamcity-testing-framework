@@ -21,7 +21,7 @@ public class ProjectsPage extends BasePage {
 
     private SelenideElement spanFavoriteProjects = $("span[class='ProjectPageHeader__title--ih']");
 
-    private SelenideElement header = $(".MainPanel__router--gF > div").shouldBe(visible, Duration.ofSeconds(10));
+    private SelenideElement header = $(".MainPanel__router--gF > div").shouldBe(visible, Duration.ofSeconds(30));
     // ElementCollection -> List<ProjectElement>
     // UI elements -> List<Object>
     // ElementCollection -> List<BasePageElement>
