@@ -9,7 +9,7 @@ runs:
         java-version: '17'
         distribution: 'zulu'
 
-    # По умолчанию в ubuntu отсуствует команда ifconfig
+    # По умолчанию в ubuntu отсутствует команда ifconfig
     - name: Install ifconfig
       shell: bash
       run: sudo apt-get update && sudo apt-get install -y net-tools
@@ -26,7 +26,7 @@ runs:
 
     - name: Pull Selenoid browsers
       shell: bash
-      # Парсить browsers.json и будет docker pull все браузеры
+      # Парсить browser.json и будем docker pull все браузеры
       run: |
         for browser in $(awk -F'"' '/"image": "/{print $4}' "config/browsers.json"); do
           docker pull $browser
@@ -49,7 +49,7 @@ runs:
         docker run -d --name selenoid-ui \
         -p 8080:8080 \
         aerokube/selenoid-ui:latest-release \
-        --selenoid-uri http://$HOST:4444
+        --selenoid-uri http://$HOST:4444  
 
     - name: Run TeamCity Server
       shell: bash
@@ -60,6 +60,10 @@ runs:
         -v $(pwd)/tmp/teamcity_server/logs:/opt/teamcity/logs  \
         -p 8111:8111 \
         jetbrains/teamcity-server:2023.11.1
+
+    - name: Grant execution permissions to mvnw
+      shell: bash
+      run: chmod +x ./mvnw
 
     - name: Cat config.properties
       shell: bash
