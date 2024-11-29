@@ -72,6 +72,8 @@ jobs:
 
       - name: Force update gh-pages branch
         run: |
+          git reset --hard
+          git clean -fd
           git fetch origin gh-pages
           git checkout gh-pages -- || git checkout --track origin/gh-pages
           git reset --hard origin/gh-pages
