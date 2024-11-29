@@ -14,15 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Make mvnw and all scripts executable
+        run: chmod -R +x ./
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'zulu'
-
-      - name: Grant execution permissions to mvnw
-        shell: bash
-        run: chmod +x ./mvnw
 
       - name: Validate Checkstyle
         run: ./mvnw validate
@@ -36,30 +35,36 @@ jobs:
       - name: TeamCity Setup
         uses: ./.github/actions/teamcity-setup
 
-      - name: Grant execution permissions to mvnw
-        shell: bash
-        run: chmod +x ./mvnw
-
       - name: Run tests
         continue-on-error: true
+        # Указываем группу, чтобы не запустить тесты, связанные с сетапом TeamCity
         run: ./mvnw test -Dtest='com.example.teamcity.${{ inputs.package }}.**' -Dgroups=Regression
-
-      - name: Grant execute permissions for swagger-coverage-commandline
-        run: chmod +x .swagger-coverage-commandline/bin/*
 
       - name: Run Swagger Coverage
         continue-on-error: true
-        if: ${{ inputs.package == 'api' }}
-        run: .swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
+        if: ${{ inputs.package == 'api'}}
+        run: |
+          echo 'verify prerequisites'
+          echo $HOST
+          .swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
 
       - name: Save Swagger Coverage
         uses: actions/upload-artifact@v4
-        if: ${{ inputs.package == 'api' }}
+        if: ${{ inputs.package == 'api'}}
         with:
           name: swagger-coverage
           path: |
             swagger-coverage-report.html
             swagger-coverage-results.json
+
+      # Загружаем историю Allure Report с специальной ветки gh-pages (https://allurereport.org/docs/integrations-github/)
+      - name: Load test report history
+        uses: actions/checkout@v2
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
 
       - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
@@ -70,19 +75,7 @@ jobs:
           allure_results: target/allure-results
           subfolder: ${{ inputs.package }}
 
-      - name: Force update gh-pages branch
-        run: |
-          git reset --hard
-          git clean -fd
-          git fetch origin gh-pages
-          git checkout gh-pages -- || git checkout --track origin/gh-pages
-          git reset --hard origin/gh-pages
-          rm -rf ./*
-          cp -r target/allure-results/* .
-          git add --all
-          git commit -m "Update Allure Report" || echo "No changes to commit"
-          git push origin gh-pages --force
-
+      # Создаем пустую ветку gh-pages на основе инструкции https://gist.github.com/ramnathv/2227408
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
         if: always()
@@ -90,4 +83,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
-          force_orphan: true
