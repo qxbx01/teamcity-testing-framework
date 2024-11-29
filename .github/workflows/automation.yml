@@ -84,13 +84,11 @@ jobs:
           allure_results: target/allure-results
           subfolder: ${{ inputs.package }}
 
-
-      - name: Pull latest changes from gh-pages
+      - name: Force update gh-pages branch
         run: |
-          rm -rf gh-pages
           git fetch origin gh-pages
           git checkout gh-pages -- || git checkout --track origin/gh-pages
-          git pull origin gh-pages --rebase || echo "No changes to pull"
+          git reset --hard origin/gh-pages
 
       - name: Prepare Allure Report
         run: |
