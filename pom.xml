@@ -21,7 +21,6 @@
     <jackson.version>2.17.2</jackson.version>
     <selenide.version>7.4.3</selenide.version>
     <swagger-coverage-version>1.5.0</swagger-coverage-version>
-    <allure.version>2.27.0</allure.version>
   </properties>
 
   <dependencies>
@@ -30,32 +29,23 @@
       <artifactId>allure-testng</artifactId>
       <version>${allure.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
+    </dependency><dependency>
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-selenide</artifactId>
       <version>${allure.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
+    </dependency><dependency>
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-rest-assured</artifactId>
       <version>${allure.version}</version>
-    </dependency>
-    <dependency>
+    </dependency><dependency>
       <groupId>com.github.viclovsky</groupId>
       <artifactId>swagger-coverage-rest-assured</artifactId>
       <version>${swagger-coverage-version}</version>
-    </dependency>
-    <dependency>
+    </dependency><dependency>
       <groupId>com.codeborne</groupId>
       <artifactId>selenide</artifactId>
       <version>${selenide.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
     </dependency><dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
@@ -69,10 +59,6 @@
       <artifactId>jackson-databind</artifactId>
       <version>${jackson.version}</version>
     </dependency><dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
-      </dependency><dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
