@@ -1,0 +1,4 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"failed","Sat Nov 30 05:58:51 GMT 2024","Sat Nov 30 05:59:44 GMT 2024","52689","Surefire suite","Surefire test","com.example.teamcity.ui.CreateProjectTest","com.example.teamcity.ui.CreateProjectTest","userCreatesProject","User should be able to create project",""
+"passed","Sat Nov 30 05:59:44 GMT 2024","Sat Nov 30 05:59:44 GMT 2024","6","Surefire suite","Surefire test","com.example.teamcity.ui.CreateProjectTest","com.example.teamcity.ui.CreateProjectTest","userCreatesProjectWithoutName","User should not be able to craete project without name",""
+"passed","Sat Nov 30 05:57:47 GMT 2024","Sat Nov 30 05:58:37 GMT 2024","50429","Surefire suite","Surefire test","com.example.teamcity.ui.SetupServerTest","com.example.teamcity.ui.SetupServerTest","setupTeamCityServerTest","setupTeamCityServerTest",""
